@@ -1,0 +1,336 @@
+#
+# wm independent hotkeys
+#
+
+# terminal emulator
+super + Return
+	alacritty
+
+# program launcher
+super + s
+	rofi -show drun
+
+# make sxhkd reload its configuration files:
+super + Escape
+	pkill -USR1 -x sxhkd
+
+#Launch applications
+# Print screen (capture region)
+{super + p, Print}
+	flameshot gui
+
+# Print screen to clipboard (focused monitor)
+{super + shift + p, shift + Print}
+	flameshot screen -c
+
+# Launch Visual Studio Code
+super + v
+	code
+
+# Launch file manager
+super + n
+	nemo
+
+# Launch file manager as root
+super + shift + n
+	sudo nemo
+
+super + b
+	google-chrome-stable
+
+super + shift + b
+	google-chrome-stable -incognito
+#
+# bspwm hotkeys
+#
+
+# quit/restart bspwm
+super + alt + {q,r}
+	bspc {quit,wm -r}
+
+# Close application
+super + shift + q
+	bspc node -c
+
+#novo
+## Window selection
+
+# Switch to last node / desktop
+{alt, super} + @Tab
+	bspc {node,desktop} --focus last
+
+# Change window tiling mode
+super + shift + @space
+	if [ "$(bspc query -N -n focused.floating)" ]; then \
+		bspc node focused -t pseudo_tiled; \
+	elif [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node focused -t floating; \
+	else \
+		bspc node focused -t tiled; \
+	fi
+
+# Select window if tiled
+super + {@Up,@Down,@Left,@Right}
+	if [ -z "$(bspc query -N -n focused.floating)" ]; then \
+		dir={north,south,west,east}; \
+		bspc node -f $dir || \
+		bspc monitor -f $dir; \
+	fi
+
+# Move window if tiled
+super + shift + {@Up,@Down,@Left,@Right}
+	if [ -z "$(bspc query -N -n focused.floating)" ]; then \
+		node=$(bspc query -N -n); \
+		desktop=$(bspc query -D -d); \
+		dir={north,south,west,east}; \
+		bspc node -f $dir.local && \
+		bspc node -f ${node} && \
+		bspc node -s $dir || \
+		bspc node -m $dir; \
+		bspc node -f ${node}; \
+	fi
+
+# Move window if floating
+super + {Up,Down,Left,Right}
+	if [ "$(bspc query -N -n focused.floating)" ]; then \
+		bspc node -v {0 -10,0 10,-10 0,10 0}; \
+	fi
+
+## Window manipulation
+
+# Move focused window to desktop on current monitor
+super + shift + {0-9}
+	bspc node -d {0-9}.local -f
+
+# Move focused window to neighbouring desktop on current monitor
+super + shift + {@Prior,@Next}
+	bspc node -d {prev,next}.local -f
+
+# Toggle monocle mode for focused window
+super + f
+	bspc desktop -l next
+
+# Sift through windows in monocle mode
+super + {comma,period}
+  bspc node -f {next,prev}.local
+
+# Toggle fullscreen mode for focused window
+super + shift + f
+	bspc node -t ~fullscreen
+
+# Swap places of current and last focused window
+super + w
+	bspc node -s last
+
+# Bring last focused window to current subnode
+super + shift + w
+	cur="$(bspc query -N -n focused)"; \
+	last="$(bspc query -N -n last)"; \
+	bspc node -i; \
+	rec="$(bspc query -N -n '.leaf.!window')"; \
+	bspc node -f "$last"; \
+	bspc node -n "$rec"; \
+	bspc node -f "$last"
+
+# Toggle node attributes: marked, locked, sticky, private, hidden
+super + alt + {m,l,s,p,h}
+	bspc node -g {marked,locked,sticky,private,hidden}
+
+## Window size and rotation
+
+# Resize window (Up)
+super + alt + @Up
+	if [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node -z bottom 0 -10 || \
+		bspc node -z top 0 -10; \
+	else \
+		bspc node -z bottom 0 -10; \
+	fi
+
+# Resize window (Down)
+super + alt + @Down
+	if [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node -z bottom 0 +10 || \
+		bspc node -z top 0 +10; \
+	else \
+		bspc node -z bottom 0 +10; \
+	fi
+
+# Resize window (Left)
+super + alt + @Left
+	if [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node -z left -10 0 || \
+		bspc node -z right -10 0; \
+	else \
+		bspc node -z right -10 0; \
+	fi
+
+# Resize window (Right)
+super + alt + @Right
+	if [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node -z left +10 0 || \
+		bspc node -z right +10 0; \
+	else \
+		bspc node -z right +10 0; \
+	fi
+
+# Rotate current leaf
+# super + r
+# 	bspc node @parent -R 90
+
+# # Rotate current display
+# super + shift + r
+# 	bspc node @/ -R 90
+
+# Balance nodes on current desktop
+super + F5
+	bspc node @/ -B
+
+## Desktop and monitor
+
+# Change desktop on current monitor
+super + {0-9}
+	bspc monitor -f "$(bspc query -M -m)"; \
+	bspc desktop -f {0-9}.local
+
+# Change desktop on all monitors
+super + alt + {0-9}
+	cur="$(bspc query -M -m)"; \
+	for m in $(bspc query -M); do \
+		bspc monitor -f "$m"; \
+		bspc desktop -f {0-9}.local; \
+	done; \
+	bspc monitor -f "$cur";
+
+# Move through neighbouring desktops on current monitor
+super + {@Prior,@Next}
+	bspc desktop -f {prev,next}.local
+
+# Move through neighbouring desktops on all monitors
+super + alt + {@Prior,@Next}
+	cur="$(bspc query -M -m)"; \
+	for m in $(bspc query -M); do \
+		bspc monitor -f "$m"; \
+		bspc desktop -f {prev,next}.local; \
+	done; \
+	bspc monitor -f "$cur";
+
+## Node tree manipulation
+
+# Select parent node
+super + @F1
+	bspc node -f @parent
+
+# Move selected nodes
+super + @F2
+	wmrc call wm/bspwm move_node
+
+# Swap desktops
+super + @F3
+	wmrc call wm/bspwm swap_desktop
+
+# Swap monitors
+super + @F4
+	wmrc call wm/bspwm swap_monitor
+
+## Bspwm
+
+# Quit bspwm
+# super + shift + e : Return
+# 	bspc quit 1
+
+# Reload config
+# super + alt + r
+# 	if wmrc unit reload; then \
+# 		wmrc call ui/notify info "wmrc" "Desktop configuration reloaded successfully."; \
+# 	else \
+# 		wmrc call ui/notify info "wmrc" "An error occurred while reloading desktop configuration.\n$ERR"; \
+# 	fi
+
+## System lock and power
+
+# Sleep
+super + @Delete
+	wmrc unit suspend
+
+# Shut down
+super + shift + @Delete 
+	shutdown now
+
+# Reboot
+super + shift + ctrl + @Delete 
+	reboot
+
+# Lock the device using physlock
+XF86Launch1
+	physlock -m -d
+
+# Lock screen and turn off screen
+super + l
+	wmrc unit lock
+
+## Multimedia keys
+
+# Change volume using standard keys for default sink
+super + {Prior, Next}
+	pactl set-sink-volume "$(pactl info | grep 'Default Sink:' | sed 's/.*: //')" {+,-}1%
+
+# Change volume using media keys for default sink
+{XF86AudioRaiseVolume,XF86AudioLowerVolume}
+	pactl set-sink-volume "$(pactl info | grep 'Default Sink:' | sed 's/.*: //')" {+,-}1%
+
+# Toggle volume using standard keys for default sink
+super + Insert
+	pactl set-sink-mute "$(pactl info | grep 'Default Sink:' | sed 's/.*: //')" toggle
+
+# Toggle volume using media keys for default sink
+XF86AudioMute
+	pactl set-sink-mute "$(pactl info | grep 'Default Sink:' | sed 's/.*: //')" toggle
+
+# Change brightness using media keys
+{XF86MonBrightnessDown,XF86MonBrightnessUp}
+	xbacklight {-,+} 9
+
+# Change brightness using backlight keys
+{XF86MonBrightnessDown,XF86MonBrightnessUp}
+	wmrc call screen/backlight {dec,inc} 20
+
+# Set brightess to low / high using media keys
+ctrl + {XF86AudioLowerVolume,XF86AudioRaiseVolume}
+	wmrc call screen/backlight equ {0,100}
+
+# Select monitor layout
+super + {o, XF86AudioMicMute}
+	wmrc call screen/layout start
+
+# Launch Pulseaudio control interface
+super + XF86AudioMute
+	pavucontrol
+
+# Toggle mute microphone
+{super + shift + Insert, XF86AudioMicMute}
+	pactl set-source-mute "$(pactl info | grep 'Default Source:' | sed 's/.*: //')" toggle
+
+# Playerctl previous track in playlist
+{super + @F10, XF86AudioPrev}
+	playerctl -a previous
+
+# Playerctl next track in playlist
+{super + @F11, XF86AudioNext}
+	playerctl -a next
+
+# Playerctl toggle pause playback
+{super + @F12, XF86AudioPlay}
+	playerctl -a play-pause
+
+## Appearance
+
+# Turn on gaps for current desktop
+super + bracketright
+	bspc config -d focused window_gap 15; \
+	bspc config -d focused border_width 2
+
+# Turn off gaps for current desktop
+super + bracketleft
+	bspc config -d focused window_gap 0; \
+	bspc config -d focused border_width 1
