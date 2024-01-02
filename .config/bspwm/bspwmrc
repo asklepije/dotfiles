@@ -21,7 +21,7 @@ bspc config gapless_monocle      true
 # bspc rule -a Screenkey manage=off
 
 #WALLPAPER
-feh --bg-fill ~/Downloads/wallpaper.png
+feh --bg-fill ~/Pictures/wallpaper.png
 
 # POLYBAR
 ~/.config/polybar/launch.sh
