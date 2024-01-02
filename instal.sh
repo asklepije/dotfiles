@@ -1,4 +1,4 @@
-sudo pacman -Syu
+osudo pacman -Syu
 
 sudo yay -S xf86-video-intel xorg-server xorg-xinit xf86-input-libinput fish alacritty nano bspwm picom code flameshot rofi polybar ttf-material-design-icons-git
 
@@ -6,7 +6,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #ln -s "$DOTFILES_DIR/.config"/* "$HOME/.config"
 dirs=$(find "$DOTFILES_DIR/.config" -type d -maxdepth 1)
-
+echo $dirs
 # Loop through list
 for dir in $dirs; do
 
