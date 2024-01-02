@@ -24,6 +24,9 @@ for dir in $dirs; do
 
 done
 
+mkdir $HOME/Pictures
+sudo cp "$DOTFILES_DIR/wallpaper.png" "$HOME/Pictures/wallpaper.png"
+
 sudo cp /etc/X11/xinit/xinitrc $HOME/.xinitrc
 
 #dodaj za xorg touchpad i xresources
