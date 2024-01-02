@@ -1,4 +1,4 @@
-osudo pacman -Syu
+sudo pacman -Syu
 
 sudo yay -S xf86-video-intel xorg-server xorg-xinit xf86-input-libinput fish alacritty nano bspwm picom code flameshot rofi polybar 
 
