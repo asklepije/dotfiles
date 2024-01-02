@@ -16,7 +16,7 @@ for dir in $dirs; do
     # dir_name="$(basename "$dir")"
 
     # Copy directory
-    cp -r "$DOTFILES_DIR/.config/$dir" "$HOME/.config/$dir"
+    # cp -r "$DOTFILES_DIR/.config/$dir" "$HOME/.config/$dir"
 
     # Create symlink to copied directory
     ln -s "$DOTFILES_DIR/.config/$dir" "$HOME_DIR/.config/$dir" 
