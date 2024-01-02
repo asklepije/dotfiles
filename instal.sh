@@ -25,7 +25,7 @@ for dir in $dirs; do
 done
 
 sudo cp /etc/X11/xinit/xinitrc $HOME/.xinitrc
-sudo "picom -f & exec bspwm" >> $HOME/.xinitrc
+
 #dodaj za xorg touchpad i xresources
 # u .Xresources samo stavi da je Xft 96, ovo bi terabalo da je pwd /etc/X11/xinit/.Xresources
 
