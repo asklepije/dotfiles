@@ -5,7 +5,7 @@ sudo yay -S xf86-video-intel xorg-server xorg-xinit xf86-input-libinput fish ala
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #ln -s "$DOTFILES_DIR/.config"/* "$HOME/.config"
-dirs=$(find "$DOTFILES_DIR/.config" -type d -maxdepth 1)
+dirs=$(find "$DOTFILES_DIR/.config" -not -type d -exec rm -f {} \
 echo $dirs
 # Loop through list
 for dir in $dirs; do
