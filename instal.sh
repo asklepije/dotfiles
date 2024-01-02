@@ -19,7 +19,7 @@ for dir in $dirs; do
     # cp -r "$DOTFILES_DIR/.config/$dir" "$HOME/.config/$dir"
 
     # Create symlink to copied directory
-    ln -s "$DOTFILES_DIR/.config/$dir" "$HOME_DIR/.config/$dir" 
+    ln -s "$DOTFILES_DIR/.config/$dir" "$HOME/.config/$dir" 
 
 
 done
