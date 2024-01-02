@@ -5,7 +5,7 @@ sudo yay -S xf86-video-intel xorg-server xorg-xinit xf86-input-libinput fish ala
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #ln -s "$DOTFILES_DIR/.config"/* "$HOME/.config"
-dirs=$(find "$DOTFILES_DIR/.config" -type d -mindepth 1)
+dirs=$(find "$DOTFILES_DIR"/.config -maxdepth 1 -type d -printf "%f\n")
 echo $dirs
 # Loop through list
 for dir in $dirs; do
@@ -16,7 +16,7 @@ for dir in $dirs; do
     # dir_name="$(basename "$dir")"
 
     # Copy directory
-    cp -r "$dir" "$HOME/.config/$dir"
+    cp -r "$DOTFILES_DIR/.config/$dir" "$HOME/.config/$dir"
 
     # Create symlink to copied directory
     ln -s "$DOTFILES_DIR/.config/$dir "$HOME_DIR/.config/$dir" 
