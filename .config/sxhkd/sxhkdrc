@@ -90,11 +90,13 @@ super + shift + {@Up,@Down,@Left,@Right}
 		bspc node -f ${node}; \
 	fi
 
-# Move window if floating
-super + {Up,Down,Left,Right}
-	if [ "$(bspc query -N -n focused.floating)" ]; then \
-		bspc node -v {0 -10,0 10,-10 0,10 0}; \
-	fi
+# # Shift focus on window
+# super + {Up,Down,Left,Right}
+# 	# bspc node -f {north,south,west,east}
+# 	if [ -z "$(bspc query -N -n focused.floating)" ]; then \
+# 		bspc node -f {north,south,west,east}
+# 	# 	bspc node -v {0 -10,0 10,-10 0,10 0}; \
+# 	fi
 
 ## Window manipulation
 
